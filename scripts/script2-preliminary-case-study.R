@@ -74,3 +74,22 @@ sol3 <- sol2 %>%
   mutate(genename =  str_extract(description,"GN=[^\\s]+") %>% 
            str_replace("GN=", ""))
 
+
+
+sol4 <- sol3 %>%  mutate(protid = str_extract(accession,"1::[A-Z][^\\s]{5}") %>% 
+                           str_replace("1::", ""))
+
+sol_2 <- sol4 %>% pivot_longer(names_to = "lineage", 
+                      values_to = "abundance", 
+                      cols = 13:27) %>% extract(lineage, c("lineage", "rep"), "([^\\s]+)\\_([a-z])")
+
+file <- "data-processed/prelim-data.csv"
+
+write.csv(sol_2, 
+            file,
+            quote = F,
+            row.names = F)
+
+check_save <- read_csv("data-processed/prelim-data.csv")
+
+                                                
